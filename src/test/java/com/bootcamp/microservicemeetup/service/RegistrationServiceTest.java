@@ -11,12 +11,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -54,7 +61,7 @@ public class RegistrationServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw business error when save a new registration with a registration duplicated")
+    @DisplayName("Should throw business error when save a new registration with a registration is duplicated")
     public void shouldNotSaveAsRegistrationDuplicated() {
 
         //settings
@@ -80,9 +87,9 @@ public class RegistrationServiceTest {
         Integer id = 20;
         Registration registration = createValidRegistration();
         registration.setId(id);
-        Mockito.when(repository.findById(id)).thenReturn(Optional.of(registration));
 
         //execution
+        Mockito.when(repository.findById(id)).thenReturn(Optional.of(registration));
         Optional<Registration> foundRegistration = registrationService.getRegistrationById(id);
 
         //assert
@@ -91,6 +98,105 @@ public class RegistrationServiceTest {
         assertThat(foundRegistration.get().getName()).isEqualTo(registration.getName());
         assertThat(foundRegistration.get().getDateOfRegistration()).isEqualTo(registration.getDateOfRegistration());
         assertThat(foundRegistration.get().getRegistration()).isEqualTo(registration.getRegistration());
+
+    }
+
+    @Test
+    @DisplayName("Should return empty when get a registration by id when it doesn't exists")
+    public void registrationNotFoundByIdTest() {
+
+        //settings
+        Integer id = 30;
+        Mockito.when(repository.findById(id)).thenReturn(Optional.empty());
+
+        //execution
+        Optional<Registration> registration  = registrationService.getRegistrationById(id);
+
+        //assert
+        assertThat(registration.isPresent()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Should delete a student")
+    public void deleteRegistrationTest() {
+
+        //settings
+        Registration registration = Registration.builder().id(30).build();
+
+        //execution
+        assertDoesNotThrow(() -> registrationService.delete(registration));
+
+        //assert
+        Mockito.verify(repository, Mockito.times(1)).delete(registration);
+    }
+
+    @Test
+    @DisplayName("Should update a registration")
+    public void updateRegistration() {
+
+        //settings
+        Integer id = 40;
+        Registration updatingRegistration = Registration.builder().id(40).build();
+
+
+        //execution
+        Registration updatedRegistration = createValidRegistration();
+        updatedRegistration.setId(id);
+
+        Mockito.when(repository.save(updatingRegistration)).thenReturn(updatedRegistration);
+        Registration registration = registrationService.update(updatingRegistration);
+
+        //assert
+        assertThat(registration.getId()).isEqualTo(updatedRegistration.getId());
+        assertThat(registration.getName()).isEqualTo(updatedRegistration.getName());
+        assertThat(registration.getDateOfRegistration()).isEqualTo(updatedRegistration.getDateOfRegistration());
+        assertThat(registration.getRegistration()).isEqualTo(updatedRegistration.getRegistration());
+    }
+
+    @Test
+    @DisplayName("Should filter registrations by properties")
+    public void findRegistrationTest() {
+
+        //settings
+        Registration registration = createValidRegistration();
+        PageRequest pageRequest = PageRequest.of(0,10);
+
+        List<Registration> listRegistrations = Arrays.asList(registration);
+        Page<Registration> page = new PageImpl<Registration>(Arrays.asList(registration),
+                PageRequest.of(0,10), 1);
+
+        //execution
+        Mockito.when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+                .thenReturn(page);
+
+        Page<Registration> result = registrationService.find(registration, pageRequest);
+
+        //assert
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent()).isEqualTo(listRegistrations);
+        assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageable().getPageSize()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("Should get a registration model by registration attribute")
+    public void getRegistrationByRegistrationAtrb() {
+
+        //settings
+        String registrationAttribute = "1234";
+
+        //execution
+        Mockito.when(repository.findByRegistration(registrationAttribute))
+                .thenReturn(Optional.of(Registration.builder().id(11).registration(registrationAttribute).build()));
+
+        Optional<Registration> registration  = registrationService.getRegistrationByRegistrationAttribute(registrationAttribute);
+
+        //assert
+        assertThat(registration.isPresent()).isTrue();
+        assertThat(registration.get().getId()).isEqualTo(11);
+        assertThat(registration.get().getRegistration()).isEqualTo(registrationAttribute);
+
+        Mockito.verify(repository, Mockito.times(1)).findByRegistration(registrationAttribute);
 
     }
 

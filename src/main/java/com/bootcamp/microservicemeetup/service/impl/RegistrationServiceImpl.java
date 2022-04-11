@@ -4,6 +4,7 @@ import com.bootcamp.microservicemeetup.exception.BusinessException;
 import com.bootcamp.microservicemeetup.model.entity.Registration;
 import com.bootcamp.microservicemeetup.repository.RegistrationRepository;
 import com.bootcamp.microservicemeetup.service.RegistrationService;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,4 +29,38 @@ public class RegistrationServiceImpl implements RegistrationService {
     public Optional<Registration> getRegistrationById(Integer id) {
         return this.repository.findById(id);
     }
+
+    @Override
+    public void delete(Registration registration) {
+        if (registration == null || registration.getId() == null) {
+            throw new IllegalArgumentException("Registration id can't be null");
+        }
+        this.repository.delete(registration);
+    }
+
+    @Override
+    public Registration update(Registration registration) {
+        if (registration == null || registration.getId() == null) {
+            throw new IllegalArgumentException("Registration id can't be null");
+        }
+        return this.repository.save(registration);
+    }
+
+    @Override
+    public Page<Registration> find(Registration filter, Pageable pageRequest) {
+        Example<Registration> example = Example.of(filter,
+                ExampleMatcher
+                        .matching()
+                        .withIgnoreCase()
+                        .withIgnoreNullValues()
+                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+
+        return repository.findAll(example, pageRequest);
+    }
+
+    @Override
+    public Optional<Registration> getRegistrationByRegistrationAttribute(String registrationAttribute) {
+        return repository.findByRegistration(registrationAttribute);
+    }
+
 }
