@@ -2,7 +2,7 @@
 
 ## O que é o projeto?
 
-Consiste em um pequeno microservice que irá ter lado de client e server no momento de se cadastrar em um meetup.
+Consiste em um pequeno microservice que possui lado de client e server no momento de se cadastrar em um meetup.
 
 ## Tecnologias utilizadas
 
