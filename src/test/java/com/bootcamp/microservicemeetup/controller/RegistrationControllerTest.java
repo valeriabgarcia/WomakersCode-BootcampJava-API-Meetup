@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -150,6 +151,110 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("registration").value(createNewRegistration().getRegistration()));
 
     }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when the registration doesn't exists")
+    public void registrationNotFoundTest() throws Exception {
+
+        //settings
+        BDDMockito.given(registrationService.getRegistrationById(anyInt())).willReturn(Optional.empty());
+
+        //execution
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get(REGISTRATION_API.concat("/" + 1))
+                .accept(MediaType.APPLICATION_JSON);
+
+        //assert
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Should delete a registration")
+    public void deleteRegistration() throws Exception {
+
+        //settings
+        BDDMockito.given(registrationService
+                        .getRegistrationById(anyInt()))
+                .willReturn(Optional.of(Registration.builder().id(11).build()));
+
+        //execution
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete(REGISTRATION_API.concat("/" + 1))
+                .accept(MediaType.APPLICATION_JSON);
+
+        //assert
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("Should return resource don´t found when no registration is found to delete")
+    public void deleteNonExistentRegistrationTest() throws Exception {
+
+        //settings
+        BDDMockito.given(registrationService
+                .getRegistrationById(anyInt())).willReturn(Optional.empty());
+
+        //execution
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete(REGISTRATION_API.concat("/" + 1))
+                .accept(MediaType.APPLICATION_JSON);
+
+        //assert
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("Should update when registration information")
+    public void updateRegistrationTest() throws Exception {
+
+        //settings
+        Integer id = 10;
+        String json = new ObjectMapper().writeValueAsString(createNewRegistration());
+
+        Registration updatingRegistration =
+                Registration.builder()
+                        .id(id)
+                        .name("Valeria B Garcia")
+                        .dateOfRegistration("20/04/2022")
+                        .registration("888")
+                        .build();
+
+        //execution
+        BDDMockito.given(registrationService.getRegistrationById(anyInt()))
+                .willReturn(Optional.of(updatingRegistration));
+
+        Registration updatedRegistration =
+                Registration.builder()
+                        .id(id)
+                        .name("Valeria Garcia")
+                        .dateOfRegistration("12/04/2022")
+                        .registration("888")
+                        .build();
+
+        BDDMockito.given(registrationService
+                        .update(updatingRegistration))
+                .willReturn(updatedRegistration);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put(REGISTRATION_API.concat("/" + 1))
+                .contentType(json)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        //assert
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(id))
+                .andExpect(jsonPath("name").value(createNewRegistration().getName()))
+                .andExpect(jsonPath("dateOfRegistration").value(createNewRegistration().getDateOfRegistration()))
+                .andExpect(jsonPath("registration").value("888"));
+    }
+
+
+
 
 
 
