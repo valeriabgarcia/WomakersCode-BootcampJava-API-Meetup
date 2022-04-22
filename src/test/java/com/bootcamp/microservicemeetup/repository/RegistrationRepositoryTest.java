@@ -1,6 +1,5 @@
 package com.bootcamp.microservicemeetup.repository;
 
-import com.bootcamp.microservicemeetup.model.RegistrationDTO;
 import com.bootcamp.microservicemeetup.model.entity.Registration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
