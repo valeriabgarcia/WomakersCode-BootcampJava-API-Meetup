@@ -4,6 +4,8 @@
 
 Consiste em um pequeno microservice que possui lado de client e server no momento de se cadastrar em um meetup.
 
+http://localhost:8080/swagger-ui//#/registration-controller
+
 ## Tecnologias utilizadas
 
 - Java 11
