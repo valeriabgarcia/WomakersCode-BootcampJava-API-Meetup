@@ -54,12 +54,20 @@ public class MeetupControllerTest {
         MeetupDTO dto = MeetupDTO.builder().registrationAttribute("001").event("Womakerscode Dados").build();
         String json = new ObjectMapper().writeValueAsString(dto);
 
-        Registration registration = Registration.builder().id(10).registration("001").build();
+        Registration registration = Registration.builder()
+                .id(10)
+                .registration("001")
+                .build();
 
         BDDMockito.given(registrationService.getRegistrationByRegistrationAttribute("001")).
                 willReturn(Optional.of(registration));
 
-        Meetup meetup = Meetup.builder().id(10).event("Womakerscode Dados").registration(registration).meetupDate("20/04/2022").build();
+        Meetup meetup = Meetup.builder()
+                .id(10)
+                .event("Womakerscode Dados")
+                .registration(registration)
+                .meetupDate("20/04/2022")
+                .build();
 
         BDDMockito.given(meetupService.save(Mockito.any(Meetup.class))).willReturn(meetup);
 

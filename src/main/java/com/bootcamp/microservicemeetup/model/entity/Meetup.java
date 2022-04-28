@@ -23,7 +23,6 @@ public class Meetup {
 
     @JoinColumn(name = "id_registration")
     @ManyToOne
-
     private Registration registration;
 
     @Column
