@@ -24,10 +24,10 @@ http://localhost:8080/swagger-ui//#/registration-controller
 - [X] Testes unitarios no repository
 - [X] Implementação do repository
 - [X] Swagger
-- [ ] Testes locais via postman
-- [ ] Deploy no azure
+- [X] Testes locais via postman
+- [X] Deploy no azure
 
 ## TODO - camada Meetup
-- [ ] Testes do repository 
+- [X] Testes do repository 
 - [X] Testes do controller
-- [ ] Testes do service
+- [X] Testes do service
