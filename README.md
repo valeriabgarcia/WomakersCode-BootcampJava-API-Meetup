@@ -29,5 +29,5 @@ http://localhost:8080/swagger-ui//#/registration-controller
 
 ## TODO - camada Meetup
 - [ ] Testes do repository 
-- [ ] Testes do controller
+- [X] Testes do controller
 - [ ] Testes do service
