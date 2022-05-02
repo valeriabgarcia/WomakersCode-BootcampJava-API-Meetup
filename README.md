@@ -4,7 +4,7 @@
 
 Consiste em um pequeno microservice que possui lado de client e server no momento de se cadastrar em um meetup.
 
-http://localhost:8080/swagger-ui//#/registration-controller
+https://app-meetup-scheduling-service-220426160906.azurewebsites.net/swagger-ui//#/
 
 ## Tecnologias utilizadas
 
