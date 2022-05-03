@@ -31,8 +31,8 @@ public class MeetupServiceImpl implements MeetupService {
     }
 
     @Override
-    public Meetup update(Meetup loan) {
-        return repository.save(loan);
+    public Meetup update(Meetup meetup) {
+        return repository.save(meetup);
     }
 
     @Override
@@ -46,10 +46,5 @@ public class MeetupServiceImpl implements MeetupService {
     }
 
     @Override
-    public void delete(Meetup meetup) {
-        if (meetup == null || meetup.getId() == null) {
-            throw new IllegalArgumentException("Meetup id cannot be null");
-        }
-        this.repository.delete(meetup);
-    }
+    public void delete(Meetup meetup) {this.repository.delete(meetup);}
 }
