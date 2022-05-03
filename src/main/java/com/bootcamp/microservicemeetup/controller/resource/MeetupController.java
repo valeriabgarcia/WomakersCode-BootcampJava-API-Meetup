@@ -62,4 +62,31 @@ public class MeetupController {
                 }).collect(Collectors.toList());
         return new PageImpl<MeetupDTO>(meetups, pageRequest, result.getTotalElements());
     }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MeetupDTO get(@PathVariable Integer id) {
+
+        return meetupService
+                .getById(id)
+                .map(meetup -> modelMapper.map(meetup, MeetupDTO.class))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("{id}")
+    public MeetupDTO update(@PathVariable Integer id, MeetupDTO meetupDTO) {
+        return meetupService.getById(id).map(meetup -> {
+            meetup.setRegistrationAttribute(meetupDTO.getRegistrationAttribute());
+            meetup.setEvent(meetupDTO.getEvent());
+            meetup = meetupService.update(meetup);
+            return modelMapper.map(meetup, MeetupDTO.class);
+        }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteByMeetupId(@PathVariable Integer id) {
+        Meetup meetup = meetupService.getById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        meetupService.delete(meetup);
+    }
 }

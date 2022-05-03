@@ -44,4 +44,12 @@ public class MeetupServiceImpl implements MeetupService {
     public Page<Meetup> getRegistrationsByMeetup(Registration registration, Pageable pageable) {
         return repository.findByRegistration(registration, pageable);
     }
+
+    @Override
+    public void delete(Meetup meetup) {
+        if (meetup == null || meetup.getId() == null) {
+            throw new IllegalArgumentException("Meetup id cannot be null");
+        }
+        this.repository.delete(meetup);
+    }
 }

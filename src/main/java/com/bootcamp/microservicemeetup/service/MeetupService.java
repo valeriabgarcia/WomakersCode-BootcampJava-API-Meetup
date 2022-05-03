@@ -19,4 +19,6 @@ public interface MeetupService {
     Page<Meetup> find(MeetupFilterDTO filterDTO, Pageable pageable);
 
     Page<Meetup> getRegistrationsByMeetup(Registration registration, Pageable pageable);
+
+    void delete(Meetup meetup);
 }
