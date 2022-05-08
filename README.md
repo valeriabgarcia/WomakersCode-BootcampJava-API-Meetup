@@ -17,8 +17,8 @@ https://app-meetup-scheduling-service-220426160906.azurewebsites.net/swagger-ui/
 
 
 ## TODO list
-- [X] Implementação da classe de serviço
-- [X] Testes no service
+- [X] Implementação da classe *service*
+- [X] Testes no *service*
 - [X] Implementação da classe *controller* da web
 - [X] Testes de contrato no *controller*
 - [X] Testes unitarios no *repository*
