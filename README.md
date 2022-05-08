@@ -24,7 +24,7 @@ https://app-meetup-scheduling-service-220426160906.azurewebsites.net/swagger-ui/
 - [X] Testes unitarios no *repository*
 - [X] Implementação do *repository*
 - [X] Swagger
-- [X] Testes locais via postman
+- [X] Testes locais via Postman
 - [X] Deploy no Azure
 
 ## TODO - camada Meetup
