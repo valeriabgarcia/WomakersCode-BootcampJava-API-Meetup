@@ -14,6 +14,8 @@ https://app-meetup-scheduling-service-220426160906.azurewebsites.net/swagger-ui/
 - JPA
 - TDD Test Driven Development
 - Azure functions
+- Swagger
+- Postman
 
 
 ## TODO list
